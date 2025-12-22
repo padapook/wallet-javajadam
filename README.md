@@ -29,138 +29,120 @@ Project For Learning JAVA
 ### 1. Install Dependencies
 ```bash
 ./mvnw clean install -DskipTests
+2. Run Project
+Bash
 
-# Run project with local profile
-dev
-
-## Development Guidelines
-### 1. Commit Message Pattern
-
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+Development Guidelines
+1. Commit Message Pattern
 Follow this conventional commit format:
 
-```
 <type>(<scope>): <description>
-```
+Types:
 
-## Development Guidelines
+feat - A new feature
 
-### 1. Commit Message Pattern
+fix - A bug fix
 
-**Types:**
-- `feat` - A new feature
-- `fix` - A bug fix
-- `docs` - Documentation changes
-- `style` - Code style changes (formatting, missing semicolons, etc.)
-- `refactor` - Code refactoring
-- `test` - Adding or updating tests
-- `chore` - Maintenance tasks
-- `add` - Adding new files or dependencies
+docs - Documentation changes
 
-**Scope:** 
-The scope should indicate what part of the codebase is affected (e.g., `api`, `docs`, `readme`, `auth`, `database`, etc.)
+style - Code style changes (formatting, missing semicolons, etc.)
 
-**Examples:**
+refactor - Code refactoring
+
+test - Adding or updating tests
+
+chore - Maintenance tasks
+
+add - Adding new files or dependencies
+
+Scope: The scope should indicate what part of the codebase is affected (e.g., api, docs, readme, auth, database, etc.)
+
+Examples:
 
 ❌ Bad:
-```
+
 feat: auth
 done
 done: Added JWT token-based authentication for secure login.
-```
-
 ✅ Good:
-```
+
 feat(auth): Added JWT token-based authentication for secure login
 fix(database): Fixed connection pool timeout issue
 docs(readme): Updated installation instructions
 refactor(controller): Simplified user validation logic
-```
+2. Import Paths
+Use fully qualified imports or organize packages properly. Avoid wildcard imports (*). Package structure in pom.xml:
 
----
+XML
 
-### 2. Import Paths
-
-Use fully qualified imports or organize packages properly. Avoid wildcard imports (*).
-Package structure in pom.xml:
-XML<groupId>com.yourcompany</groupId>
+<groupId>com.yourcompany</groupId>
 <artifactId>exam-survey-backend</artifactId>
+Examples:
 
-**Examples:**
 ❌ Bad:
-```
-Javaimport com.yourcompany.*;
+
+Java
+
+import com.yourcompany.*;
 import java.util.*;
-```
 ✅ Good:
-```
-Javaimport com.yourcompany.examsurvey.model.User;
+
+Java
+
+import com.yourcompany.examsurvey.model.User;
 import com.yourcompany.examsurvey.repository.UserRepository;
 import java.time.LocalDateTime;
-```
+Tips:
 
-**Tips:**
-```
 Use IDE auto-import features (e.g., IntelliJ IDEA) and run mvn formatter:format for consistency.
-```
-
-### 3. Naming Conventions
-
-#### Follow Java naming conventions:
-
-##### Classes and Interfaces** 
-
-- **Always PascalCase (UpperCamelCase)**
+3. Naming Conventions
+Follow Java naming conventions:
+Classes and Interfaces
+Always PascalCase (UpperCamelCase)
 
 ❌ Bad:
-```java
-Javaclass userProfile {}      // Lowercase
-class User_profile {}     // Underscore
-```
 
+Java
+
+class userProfile {}      // Lowercase
+class User_profile {}     // Underscore
 ✅ Good:
-```java
-Javapublic class UserProfile {}
+
+Java
+
+public class UserProfile {}
 public interface UserRepository {}
 Methods and Variables
-```
+camelCase (starts with lowercase)
 
-##### Variables and Constants
-
-- **camelCase (starts with lowercase)**
 ❌ Bad:
-```java
-Javapublic void IsUserCanAccess() {}  // PascalCase for method
+
+Java
+
+public void IsUserCanAccess() {}  // PascalCase for method
 int User_ID;                      // Uppercase with underscore
-```
-
 ✅ Good:
-```java
-Java// Public method
+
+Java
+
 public void isUserCanAccess() {}
-```
+Variables
+Java
 
----
-
-##### Variables
-```java
 private String userName;
 private boolean isAuthenticated;
-```
+Constants - UPPER_SNAKE_CASE
+Java
 
-##### Constants - UPPER_SNAKE_CASE
-```java
 public static final int MAX_CONNECTIONS = 100;
 private static final int DEFAULT_RETRIES = 3;
 Package Names
-
 All lowercase, no underscores, use reverse domain naming
-```
 
----
+Java
 
-```java
-Javapackage com.yourcompany.examsurvey.controller;  ✅
-package com.yourcompany.examsurvey;            ✅
-package com.yourcompany.user_service;          ❌
-package com.yourcompany.userService;           ❌
-```
+package com.yourcompany.examsurvey.controller;  // ✅
+package com.yourcompany.examsurvey;            // ✅
+package com.yourcompany.user_service;          // ❌
+package com.yourcompany.userService;           // ❌
