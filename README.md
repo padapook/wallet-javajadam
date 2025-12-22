@@ -29,120 +29,138 @@ Project For Learning JAVA
 ### 1. Install Dependencies
 ```bash
 ./mvnw clean install -DskipTests
-2. Run Project
-Bash
+```
 
+### 2. Run Project
+```bash
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
-Development Guidelines
-1. Commit Message Pattern
+```
+
+---
+
+## Development Guidelines
+
+### 1. Commit Message Pattern
 Follow this conventional commit format:
 
+```
 <type>(<scope>): <description>
-Types:
+```
 
-feat - A new feature
+**Types:**
+- `feat` - A new feature
+- `fix` - A bug fix
+- `docs` - Documentation changes
+- `style` - Code style changes (formatting, missing semicolons, etc.)
+- `refactor` - Code refactoring
+- `test` - Adding or updating tests
+- `chore` - Maintenance tasks
+- `add` - Adding new files or dependencies
 
-fix - A bug fix
+**Scope:** The scope should indicate what part of the codebase is affected (e.g., api, docs, readme, auth, database, etc.)
 
-docs - Documentation changes
-
-style - Code style changes (formatting, missing semicolons, etc.)
-
-refactor - Code refactoring
-
-test - Adding or updating tests
-
-chore - Maintenance tasks
-
-add - Adding new files or dependencies
-
-Scope: The scope should indicate what part of the codebase is affected (e.g., api, docs, readme, auth, database, etc.)
-
-Examples:
+**Examples:**
 
 ❌ Bad:
-
+```
 feat: auth
 done
 done: Added JWT token-based authentication for secure login.
-✅ Good:
+```
 
+✅ Good:
+```
 feat(auth): Added JWT token-based authentication for secure login
 fix(database): Fixed connection pool timeout issue
 docs(readme): Updated installation instructions
 refactor(controller): Simplified user validation logic
-2. Import Paths
-Use fully qualified imports or organize packages properly. Avoid wildcard imports (*). Package structure in pom.xml:
+```
 
-XML
+---
 
+### 2. Import Paths
+Use fully qualified imports or organize packages properly. Avoid wildcard imports (*).
+Package structure in pom.xml:
+
+```xml
 <groupId>com.yourcompany</groupId>
 <artifactId>exam-survey-backend</artifactId>
-Examples:
+```
+
+**Examples:**
 
 ❌ Bad:
-
-Java
-
+```java
 import com.yourcompany.*;
 import java.util.*;
+```
+
 ✅ Good:
-
-Java
-
+```java
 import com.yourcompany.examsurvey.model.User;
 import com.yourcompany.examsurvey.repository.UserRepository;
 import java.time.LocalDateTime;
-Tips:
+```
 
+**Tips:**
+```
 Use IDE auto-import features (e.g., IntelliJ IDEA) and run mvn formatter:format for consistency.
-3. Naming Conventions
-Follow Java naming conventions:
-Classes and Interfaces
-Always PascalCase (UpperCamelCase)
+```
+
+---
+
+### 3. Naming Conventions
+#### Follow Java naming conventions:
+
+##### Classes and Interfaces
+- **Always PascalCase (UpperCamelCase)**
 
 ❌ Bad:
-
-Java
-
+```java
 class userProfile {}      // Lowercase
 class User_profile {}     // Underscore
+```
+
 ✅ Good:
-
-Java
-
+```java
 public class UserProfile {}
 public interface UserRepository {}
-Methods and Variables
-camelCase (starts with lowercase)
+```
+
+##### Methods and Variables
+- **camelCase (starts with lowercase)**
 
 ❌ Bad:
-
-Java
-
+```java
 public void IsUserCanAccess() {}  // PascalCase for method
 int User_ID;                      // Uppercase with underscore
+```
+
 ✅ Good:
-
-Java
-
+```java
 public void isUserCanAccess() {}
-Variables
-Java
+```
 
+---
+
+##### Variables
+```java
 private String userName;
 private boolean isAuthenticated;
-Constants - UPPER_SNAKE_CASE
-Java
+```
 
+##### Constants - UPPER_SNAKE_CASE
+```java
 public static final int MAX_CONNECTIONS = 100;
 private static final int DEFAULT_RETRIES = 3;
-Package Names
+```
+
+##### Package Names
 All lowercase, no underscores, use reverse domain naming
 
-Java
-
+```java
 package com.yourcompany.examsurvey.controller;  // ✅
 package com.yourcompany.examsurvey;            // ✅
 package com.yourcompany.user_service;          // ❌
 package com.yourcompany.userService;           // ❌
+```
