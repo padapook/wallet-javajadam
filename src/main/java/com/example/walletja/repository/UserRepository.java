@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-   
+    @Query("SELECT * FROM User WHERE isDeleted = false")
+    List<User> findAllActiveUsers();
 }
