@@ -83,22 +83,22 @@ Use fully qualified imports or organize packages properly. Avoid wildcard import
 Package structure in pom.xml:
 
 ```xml
-<groupId>com.yourcompany</groupId>
-<artifactId>exam-survey-backend</artifactId>
+<groupId>com.donttestonprod</groupId>
+<artifactId>eiei</artifactId>
 ```
 
 **Examples:**
 
 ❌ Bad:
 ```java
-import com.yourcompany.*;
+import com.donttestonprod.*;
 import java.util.*;
 ```
 
 ✅ Good:
 ```java
-import com.yourcompany.examsurvey.model.User;
-import com.yourcompany.examsurvey.repository.UserRepository;
+import com.donttestonprod.model.User;
+import com.donttestonprod.repository.UserRepository;
 import java.time.LocalDateTime;
 ```
 
@@ -159,8 +159,8 @@ private static final int DEFAULT_RETRIES = 3;
 All lowercase, no underscores, use reverse domain naming
 
 ```java
-package com.yourcompany.examsurvey.controller;  // ✅
-package com.yourcompany.examsurvey;            // ✅
-package com.yourcompany.user_service;          // ❌
-package com.yourcompany.userService;           // ❌
+package com.donttestonprod.controller;  // ✅
+package com.donttestonprod;            // ✅
+package com.donttestonprod.user_service;          // ❌
+package com.donttestonprod.userService;           // ❌
 ```
