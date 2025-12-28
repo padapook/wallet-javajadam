@@ -5,16 +5,16 @@ import com.example.walletja.repository.UserRepository;
 import com.example.walletja.util.PasswordUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDateTime;
+// import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class UserService {
-    private final UserRepository userRepository; //1
+    private final UserRepository userRepository;
     private final PasswordUtil passwordUtil;
 
-    public UserService(UserRepository userRepository, PasswordUtil passwordUtil) { // 2
+    public UserService(UserRepository userRepository, PasswordUtil passwordUtil) {
         this.userRepository = userRepository;
         this.passwordUtil = passwordUtil;
     }
