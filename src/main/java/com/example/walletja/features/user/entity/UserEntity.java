@@ -16,7 +16,7 @@ import com.example.walletja.features.account.entity.Account;
 @Table(name = "users")
 @Getter @Setter
 
-public class User {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

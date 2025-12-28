@@ -4,13 +4,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query; 
 import org.springframework.stereotype.Repository;
 
-import com.example.walletja.features.user.entity.User;
+import com.example.walletja.features.user.entity.UserEntity;
 
 import java.util.List;                             
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     @Query("SELECT u FROM User u WHERE u.isDeleted = false")
-    List<User> findAllActiveUsers();
+    List<UserEntity> findAllActiveUsers();
 }

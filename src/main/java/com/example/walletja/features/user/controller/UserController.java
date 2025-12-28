@@ -1,6 +1,8 @@
 package com.example.walletja.features.user.controller;
 
-import com.example.walletja.features.user.entity.User;
+import com.example.walletja.common.dto.ApiResponse;
+import com.example.walletja.features.user.dto.UserDto;
+import com.example.walletja.features.user.entity.UserEntity;
 import com.example.walletja.features.user.service.UserService;
 
 import org.springframework.http.HttpStatus;
@@ -23,13 +25,29 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) {
-        User createdUser = userService.registerUser(user);
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    public ResponseEntity<ApiResponse<UserDto.Response>> register(@RequestBody UserDto.RegisterRequest request) {
+        
+        UserEntity userEntity = new UserEntity(); 
+        userEntity.setUsername(request.getUsername());
+        userEntity.setPassword(request.getPassword());
+        userEntity.setNameTh(request.getNameTh());
+        userEntity.setNameEn(request.getNameEn());
+
+        UserEntity createdUser = userService.registerUser(userEntity);
+
+        UserDto.Response userResponse = new UserDto.Response();
+        userResponse.setAccountId(createdUser.getAccountId());
+        userResponse.setUsername(createdUser.getUsername());
+        userResponse.setNameTh(createdUser.getNameTh());
+        userResponse.setNameEn(createdUser.getNameEn());
+        userResponse.setCreatedDate(createdUser.getCreatedDate());
+
+        ApiResponse<UserDto.Response> response = new ApiResponse<>(userResponse, true, 201, "Register success");
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<User>> getUsers() {
+    public ResponseEntity<List<UserEntity>> getUsers() {
         return ResponseEntity.ok(userService.listUsers());
     }
 

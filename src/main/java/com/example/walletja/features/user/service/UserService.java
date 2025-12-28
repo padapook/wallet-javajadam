@@ -1,7 +1,7 @@
 package com.example.walletja.features.user.service;
 
 import com.example.walletja.common.util.PasswordUtil;
-import com.example.walletja.features.user.entity.User;
+import com.example.walletja.features.user.entity.UserEntity;
 import com.example.walletja.features.user.repository.UserRepository;
 
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class UserService {
     }
 
     @Transactional
-    public User registerUser(User user) {
+    public UserEntity registerUser(UserEntity user) {
         if (user.getAccountId() == null) {
             user.setAccountId(UUID.randomUUID().toString());
         }
@@ -31,7 +31,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public List<User> listUsers() {
+    public List<UserEntity> listUsers() {
         return userRepository.findAll().stream().filter(user -> !user.getIsDeleted()).toList();
     }
 }

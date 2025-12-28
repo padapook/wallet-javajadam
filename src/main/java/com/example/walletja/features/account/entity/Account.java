@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import com.example.walletja.features.user.entity.User;
+import com.example.walletja.features.user.entity.UserEntity;
 
 @Entity
 @Table(name = "accounts")
@@ -46,5 +46,5 @@ public class Account {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private UserEntity user;
 }
