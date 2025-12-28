@@ -1,4 +1,4 @@
-package com.example.walletja.dto;
+package com.example.walletja.common.dto;
 
 import java.time.LocalDateTime;
 

@@ -1,4 +1,4 @@
-package com.example.walletja.entity;
+package com.example.walletja.features.account.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+
+import com.example.walletja.features.user.entity.User;
 
 @Entity
 @Table(name = "accounts")

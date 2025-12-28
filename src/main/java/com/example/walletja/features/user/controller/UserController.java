@@ -1,7 +1,8 @@
-package com.example.walletja.controller;
+package com.example.walletja.features.user.controller;
 
-import com.example.walletja.entity.User;
-import com.example.walletja.service.UserService;
+import com.example.walletja.features.user.entity.User;
+import com.example.walletja.features.user.service.UserService;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

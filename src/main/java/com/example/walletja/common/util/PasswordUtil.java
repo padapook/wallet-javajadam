@@ -1,4 +1,4 @@
-package com.example.walletja.util;
+package com.example.walletja.common.util;
 
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.example.walletja.entity;
+package com.example.walletja.features.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,6 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import jakarta.persistence.EntityListeners;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import com.example.walletja.features.account.entity.Account;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)

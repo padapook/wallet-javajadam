@@ -1,8 +1,9 @@
-package com.example.walletja.service;
+package com.example.walletja.features.user.service;
 
-import com.example.walletja.entity.User;
-import com.example.walletja.repository.UserRepository;
-import com.example.walletja.util.PasswordUtil;
+import com.example.walletja.common.util.PasswordUtil;
+import com.example.walletja.features.user.entity.User;
+import com.example.walletja.features.user.repository.UserRepository;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 // import java.time.LocalDateTime;
