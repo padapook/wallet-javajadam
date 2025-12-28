@@ -7,6 +7,7 @@ import com.example.walletja.features.user.entity.UserEntity;
 import com.example.walletja.features.user.repository.UserRepository;
 import com.example.walletja.features.user.dto.UserDto;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 // import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 // import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+
 
 
 @Service
