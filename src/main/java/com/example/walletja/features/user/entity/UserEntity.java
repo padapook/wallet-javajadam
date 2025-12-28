@@ -25,8 +25,8 @@ public class UserEntity {
     private String accountId;
 
     @Column(unique = true, nullable = false)
-    private String username;
 
+    private String username;
     private String password;
     private String titleNameTh;
     private String titleNameEn;
