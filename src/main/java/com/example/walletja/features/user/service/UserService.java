@@ -7,8 +7,8 @@ import com.example.walletja.features.user.entity.UserEntity;
 import com.example.walletja.features.user.repository.UserRepository;
 import com.example.walletja.features.user.dto.UserDto;
 
-import org.springframework.cache.annotation.CacheEvict;
-// import org.springframework.cache.annotation.Cacheable;
+// import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 // import java.time.LocalDateTime;
@@ -46,7 +46,7 @@ public class UserService {
     }
 
     @Transactional
-    @CacheEvict(value = "userProfile", key = "#user.username")
+    @Cacheable(value = "userProfile", key = "#username")
     public UserDto.Response getUserProfile(String username) {
         UserEntity user = userRepository.findActiveUserByUsername(username)
                 .filter(u -> !u.getIsDeleted())
