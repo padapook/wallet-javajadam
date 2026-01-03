@@ -8,7 +8,13 @@ import org.springframework.cache.CacheManager;
 // import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -42,10 +48,9 @@ public class UserController {
         userResponse.setCreatedDate(createdUser.getCreatedDate());
 
         DetailedResponse<UserDto.Response> response = new DetailedResponse<>(
-            201, 
-            "Register success", 
-            userResponse
-        );
+                201,
+                "Register success",
+                userResponse);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -59,10 +64,9 @@ public class UserController {
         UserDto.Response profile = userService.getUserProfile(username);
 
         DetailedResponse<UserDto.Response> response = new DetailedResponse<>(
-            200, 
-            "Success", 
-            profile
-        );
+                200,
+                "Success",
+                profile);
         response.setSource(source);
 
         return ResponseEntity.ok(response);
@@ -81,7 +85,7 @@ public class UserController {
     public ResponseEntity<String> registerTest(@RequestParam String message) {
         // เรียกใช้ Service เพื่อส่ง Message
         userService.registerUser(message);
-        
+
         return ResponseEntity.ok("Producer sent message: " + message + " to RabbitMQ!");
     }
 }
