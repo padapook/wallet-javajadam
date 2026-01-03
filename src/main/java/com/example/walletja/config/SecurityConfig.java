@@ -32,6 +32,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/users/register").permitAll()
                 .requestMatchers("/api/users/{username}").permitAll()
+                .requestMatchers("api/users/test-message-mq").permitAll()
                 .anyRequest().authenticated()
             )
 

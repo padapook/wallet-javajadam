@@ -16,16 +16,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
-
-
 @Service
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordUtil passwordUtil;
+    private final RabbitTemplate rabbitTemplate;
 
-    public UserService(UserRepository userRepository, PasswordUtil passwordUtil) {
+    public UserService(UserRepository userRepository, PasswordUtil passwordUtil, RabbitTemplate rabbitTemplate) {
         this.userRepository = userRepository;
         this.passwordUtil = passwordUtil;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @Transactional
@@ -41,6 +41,15 @@ public class UserService {
         user.setPassword(passwordUtil.hashPassword(user.getPassword()));
         
         return userRepository.save(user);
+    }
+
+    public void registerUser(String message) {
+        rabbitTemplate.convertAndSend(
+            com.example.walletja.features.user.config.UserRabbitConfig.EXCHANGE,
+            com.example.walletja.features.user.config.UserRabbitConfig.KEY_USER_REGISTRATION,
+            message
+        );
+        System.out.println("test message for handle MQ");
     }
 
     public List<UserEntity> listUsers() {
