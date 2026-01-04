@@ -45,14 +45,14 @@ public class UserServiceTest {
     @Test
     @DisplayName("Test Case 1 : ลองปิง Msg To MQ")
     public void ShouldSendMsgToRabbitMQ() {
-        String testMessage = "Inject Message";
+        UserEntity user = new UserEntity();
 
-        userService.registerUser(testMessage);
+        userService.sendUserRegistrationMessage(user);
 
         verify(rabbitTemplate).convertAndSend(
             eq(UserRabbitConfig.EXCHANGE),
             eq(UserRabbitConfig.KEY_USER_REGISTRATION),
-            eq(testMessage)
+            any(UserEntity.class)
         );
     }
 

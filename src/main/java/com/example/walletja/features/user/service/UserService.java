@@ -43,13 +43,13 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void registerUser(String message) {
+    public void sendUserRegistrationMessage(UserEntity user) {
         rabbitTemplate.convertAndSend(
             com.example.walletja.features.user.config.UserRabbitConfig.EXCHANGE,
             com.example.walletja.features.user.config.UserRabbitConfig.KEY_USER_REGISTRATION,
-            message
+            user
         );
-        System.out.println("test message for handle MQ");
+        System.out.println("Sent user data to MQ: " + user.getUsername());
     }
 
     public List<UserEntity> listUsers() {

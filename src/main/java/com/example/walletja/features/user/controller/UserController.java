@@ -77,14 +77,12 @@ public class UserController {
         return ResponseEntity.ok(userService.listUsers());
     }
 
-    /**
-     * Endpoint สำหรับทดสอบการส่ง Message เข้า RabbitMQ
-     * URL: http://localhost:8080/api/users/register-test?email=mhooham@test.com
-     */
     @GetMapping("/test-message-mq")
     public ResponseEntity<String> registerTest(@RequestParam String message) {
-        // เรียกใช้ Service เพื่อส่ง Message
-        userService.registerUser(message);
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUsername(message);
+
+        userService.sendUserRegistrationMessage(userEntity);
 
         return ResponseEntity.ok("Producer sent message: " + message + " to RabbitMQ!");
     }
