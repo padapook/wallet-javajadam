@@ -15,14 +15,12 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 @Configuration
 public class UserRabbitConfig {
 
-    public static final String EXCHANGE = "walletja.exchange";
-    
+    public static final String EXCHANGE = "user.registration.exchange";
     public static final String QUEUE_USER_REGISTER = "user.registration.queue";
     public static final String KEY_USER_REGISTRATION = "user.registration.key";
 
-
     @Bean
-    public DirectExchange walletExchange() {
+    public DirectExchange userExchange() {
         return new DirectExchange(EXCHANGE);
     }
 
@@ -32,10 +30,10 @@ public class UserRabbitConfig {
     }
 
     @Bean
-    public Binding bindingUserRegistration(Queue userRegistrationQueue, DirectExchange walletExchange) {
+    public Binding bindingUserRegistration(Queue userRegistrationQueue, DirectExchange userExchange) {
         return BindingBuilder
                 .bind(userRegistrationQueue)
-                .to(walletExchange)
+                .to(userExchange)
                 .with(KEY_USER_REGISTRATION);
     }
 
