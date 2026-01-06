@@ -6,6 +6,7 @@ import com.example.walletja.common.util.PasswordUtil;
 import com.example.walletja.features.user.entity.UserEntity;
 import com.example.walletja.features.user.repository.UserRepository;
 import com.example.walletja.features.user.dto.UserDto;
+import com.example.walletja.features.user.dto.UserEventDto;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 // import org.springframework.cache.annotation.CacheEvict;
@@ -48,12 +49,15 @@ public class UserService {
     }
 
     public void sendUserRegistrationMessage(UserEntity user) {
+        // entity -> dto
+        UserEventDto event = new UserEventDto(user.getUsername());
+
         rabbitTemplate.convertAndSend(
             com.example.walletja.features.user.config.UserRabbitConfig.EXCHANGE,
             com.example.walletja.features.user.config.UserRabbitConfig.KEY_USER_REGISTRATION,
-            user
+            // user
+            event
         );
-        System.out.println("Sent user data to MQ: " + user.getUsername());
     }
 
     public List<UserEntity> listUsers() {
