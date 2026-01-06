@@ -30,6 +30,10 @@ public class UserService {
 
     @Transactional
     public UserEntity registerUser(UserEntity user) {
+        if (!user.getUsername().matches("^[a-zA-Z0-9]+$")) {
+            throw new IllegalArgumentException("Username must be alphanumeric only");
+        }
+
         userRepository.findUserByUsername(user.getUsername())
             .ifPresent(u -> { 
                 throw new UserAlreadyExistsException("Username already exists"); 

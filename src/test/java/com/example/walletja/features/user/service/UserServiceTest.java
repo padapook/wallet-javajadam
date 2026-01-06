@@ -23,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.any;
 
+import org.mockito.ArgumentCaptor;
+
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
@@ -45,15 +47,25 @@ public class UserServiceTest {
     @Test
     @DisplayName("Test Case 1 : ลองปิง Msg To MQ")
     public void ShouldSendMsgToRabbitMQ() {
+        // เพิ่ม arrange
+        ArgumentCaptor<UserEntity> userCaptor = ArgumentCaptor.forClass(UserEntity.class);
         UserEntity user = new UserEntity();
+        user.setUsername("plukpingMQ");
 
+        // Act
         userService.sendUserRegistrationMessage(user);
 
+        // Assert
         verify(rabbitTemplate).convertAndSend(
             eq(UserRabbitConfig.EXCHANGE),
             eq(UserRabbitConfig.KEY_USER_REGISTRATION),
-            any(UserEntity.class)
+            // any(UserEntity.class)
+            userCaptor.capture()
         );
+
+        // Inspect data ที่ส่งมา
+        UserEntity capturedUser = userCaptor.getValue();
+        assertEquals("plukpingMQ", capturedUser.getUsername());
     }
 
     @Test
@@ -96,4 +108,35 @@ public class UserServiceTest {
 
         assertEquals("Username already exists", exception.getMessage());
     }
+
+    @Test
+    @DisplayName("Test CAse 4: Username ต้องเป็น string number เท่านั้น")
+    public void ShouldSuccessWhenUsernameIsAlphanumeric() {
+        UserEntity user = new UserEntity();
+        user.setUsername("test4nosymbol");
+        user.setPassword("123456!");
+
+        when(passwordUtil.hashPassword("123456!")).thenReturn("hashed");
+        when(userRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        UserEntity result = userService.registerUser(user);
+
+        assertEquals("test4nosymbol", result.getUsername());
+    }
+
+    @Test
+    @DisplayName("Test Case 5 : Username มี Symbol ต้อง Test Failed")
+    public void ShouldFailedWhenUsernameHasSymbol() {
+        UserEntity user = new UserEntity();
+        user.setUsername("test5symbol_");
+        user.setPassword("123456!");
+
+        IllegalArgumentException exception = assertThrows (
+            IllegalArgumentException.class,
+            () -> userService.registerUser(user)
+        );
+
+        assertEquals("Username must be alphanumeric only", exception.getMessage());
+    }
+    
 }

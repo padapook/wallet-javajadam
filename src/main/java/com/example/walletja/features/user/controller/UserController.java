@@ -84,6 +84,6 @@ public class UserController {
 
         userService.sendUserRegistrationMessage(userEntity);
 
-        return ResponseEntity.ok("Producer sent message: " + message + " to RabbitMQ!");
+        return ResponseEntity.ok("Producer sent message: " + message + " to RabbitMQ");
     }
 }
