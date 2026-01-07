@@ -45,59 +45,59 @@ public class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
-    @Test
-    @DisplayName("Test Case 0 : ลองปิง Msg To MQ")
-    public void ShouldSendMsgToRabbitMQ() {
-        // เพิ่ม arrange
-        ArgumentCaptor<UserEntity> userCaptor = ArgumentCaptor.forClass(UserEntity.class);
-        UserEntity user = new UserEntity();
-        user.setUsername("plukpingMQ");
+    // @Test
+    // @DisplayName("Test Case 0 : ลองปิง Msg To MQ")
+    // public void ShouldSendMsgToRabbitMQ() {
+    //     // เพิ่ม arrange
+    //     ArgumentCaptor<UserEntity> userCaptor = ArgumentCaptor.forClass(UserEntity.class);
+    //     UserEntity user = new UserEntity();
+    //     user.setUsername("plukpingMQ");
 
-        // Act
-        userService.sendUserRegistrationMessage(user);
+    //     // Act
+    //     userService.sendUserRegistrationMessage(user);
 
-        // Assert
-        verify(rabbitTemplate).convertAndSend(
-            eq(UserRabbitConfig.EXCHANGE),
-            eq(UserRabbitConfig.KEY_USER_REGISTRATION),
-            // any(UserEntity.class)
-            userCaptor.capture()
-        );
+    //     // Assert
+    //     verify(rabbitTemplate).convertAndSend(
+    //         eq(UserRabbitConfig.EXCHANGE),
+    //         eq(UserRabbitConfig.KEY_USER_REGISTRATION),
+    //         // any(UserEntity.class)
+    //         userCaptor.capture()
+    //     );
 
-        // Inspect data ที่ส่งมา
-        UserEntity capturedUser = userCaptor.getValue();
-        assertEquals("plukpingMQ", capturedUser.getUsername());
-    }
+    //     // Inspect data ที่ส่งมา
+    //     UserEntity capturedUser = userCaptor.getValue();
+    //     assertEquals("plukpingMQ", capturedUser.getUsername());
+    // }
 
 
-    @Test
-    @DisplayName("Test Case 1 : ส่ง DTO ไป MQ จริง และ ignore ข้อมูลบางฟิลด์(เช่น password) ไม่ให้หลุดเข้า MQ")
-    public void ShouldSendUserEventDTOToMQ() {
-        // Arrange 
-        // UserEventDto เป็น dtoCaptor
-        ArgumentCaptor<UserEventDto> dtoCaptor = ArgumentCaptor.forClass(UserEventDto.class);
-        UserEntity user = new UserEntity();
+    // @Test
+    // @DisplayName("Test Case 1 : ส่ง DTO ไป MQ จริง และ ignore ข้อมูลบางฟิลด์(เช่น password) ไม่ให้หลุดเข้า MQ")
+    // public void ShouldSendUserEventDTOToMQ() {
+    //     // Arrange 
+    //     // UserEventDto เป็น dtoCaptor
+    //     ArgumentCaptor<UserEventDto> dtoCaptor = ArgumentCaptor.forClass(UserEventDto.class);
+    //     UserEntity user = new UserEntity();
 
-        user.setUsername("pluktestusernamedto");
-        user.setPassword("123456!");
-        user.setNameTh("ปุ๊ก");
-        user.setNameEn("Pook");
+    //     user.setUsername("pluktestusernamedto");
+    //     user.setPassword("123456!");
+    //     user.setNameTh("ปุ๊ก");
+    //     user.setNameEn("Pook");
 
-        // Act
-        userService.sendUserRegistrationMessage(user);
+    //     // Act
+    //     userService.sendUserRegistrationMessage(user);
 
-        // Assert 
-        verify(rabbitTemplate).convertAndSend(
-            eq(UserRabbitConfig.EXCHANGE),
-            eq(UserRabbitConfig.KEY_USER_REGISTRATION),
-            dtoCaptor.capture()
-        );
+    //     // Assert 
+    //     verify(rabbitTemplate).convertAndSend(
+    //         eq(UserRabbitConfig.EXCHANGE),
+    //         eq(UserRabbitConfig.KEY_USER_REGISTRATION),
+    //         dtoCaptor.capture()
+    //     );
 
-        // inspect data
-        UserEventDto captureEvent = dtoCaptor.getValue();
-        assertEquals("pluktestusernamedto", captureEvent.getUsername());
+    //     // inspect data
+    //     UserEventDto captureEvent = dtoCaptor.getValue();
+    //     assertEquals("pluktestusernamedto", captureEvent.getUsername());
 
-    }
+    // }
     
     @Test
     @DisplayName("Test Case 2 : ควร Insert Register Data เข้า Database และ Hash PW แล้ว")

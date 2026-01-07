@@ -3,11 +3,10 @@ package com.example.walletja.features.user.consumer;
 import com.example.walletja.features.user.config.UserRabbitConfig;
 // import com.example.walletja.features.user.entity.UserEntity;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.stereotype.Component;
+// import org.springframework.stereotype.Component;
 import com.example.walletja.features.user.dto.UserEventDto;
 
-
-@Component
+// @Component
 public class UserConsumer {
 
     /**

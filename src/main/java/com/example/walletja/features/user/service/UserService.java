@@ -24,11 +24,14 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
-// import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordUtil passwordUtil;
@@ -38,13 +41,13 @@ public class UserService {
     private final ObjectMapper objectMapper;
 
 
-    public UserService(UserRepository userRepository, PasswordUtil passwordUtil, OutboxRepository outboxRepository, ObjectMapper objectMapper) {
-        this.userRepository = userRepository;
-        this.passwordUtil = passwordUtil;
-        this.outboxRepository = outboxRepository;
-        this.objectMapper = objectMapper;
+    // public UserService(UserRepository userRepository, PasswordUtil passwordUtil, OutboxRepository outboxRepository, ObjectMapper objectMapper) {
+        // this.userRepository = userRepository;
+        // this.passwordUtil = passwordUtil;
+        // this.outboxRepository = outboxRepository;
+        // this.objectMapper = objectMapper;
         // this.rabbitTemplate = rabbitTemplate;
-    }
+    // }
 
     @Transactional
     public UserEntity registerUser(UserEntity user) {

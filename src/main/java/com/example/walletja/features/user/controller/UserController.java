@@ -77,13 +77,13 @@ public class UserController {
         return ResponseEntity.ok(userService.listUsers());
     }
 
-    @GetMapping("/test-message-mq")
-    public ResponseEntity<String> registerTest(@RequestParam String message) {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setUsername(message);
+    // @GetMapping("/test-message-mq")
+    // public ResponseEntity<String> registerTest(@RequestParam String message) {
+    //     UserEntity userEntity = new UserEntity();
+    //     userEntity.setUsername(message);
 
-        userService.sendUserRegistrationMessage(userEntity);
+    //     userService.sendUserRegistrationMessage(userEntity);
 
-        return ResponseEntity.ok("Producer sent message: " + message + " to RabbitMQ");
-    }
+    //     return ResponseEntity.ok("Producer sent message: " + message + " to RabbitMQ");
+    // }
 }
