@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class WalletRabbitConfig {
 
-    public static String EXCHANGE = "walletja.exchange";
+    public static String EXCHANGE = "wallet.exchange";
 
     public static String QUEUE_TRANSACTION_DEPOSIT = "wallet.deposit.queue";
     public static String KEY_TRANSACTION_DEPOSIT = "wallet.deposit.key";
@@ -18,6 +18,10 @@ public class WalletRabbitConfig {
     public static String QUEUE_TRANSACTION_WITHDRAW = "wallet.withdraw.queue";
     public static String KEY_TRANSACTION_WITHDRAW = "wallet.withdraw.key";
 
+    @Bean
+    public DirectExchange walletExchange() {
+        return new DirectExchange(EXCHANGE);
+    }
 
     @Bean
     public Queue walletDepositQueue() {

@@ -30,9 +30,12 @@ public class SecurityConfig {
 
             // Allow Permission URL
             .authorizeHttpRequests(auth -> auth
+                // .requestMatchers("/api/public/**").permitAll()
                 .requestMatchers("/api/users/register").permitAll()
                 .requestMatchers("/api/users/{username}").permitAll()
                 .requestMatchers("api/users/test-message-mq").permitAll()
+                .requestMatchers("/api/wallets/deposit").permitAll()
+                .requestMatchers("/api/wallets/withdraw").permitAll()
                 .anyRequest().authenticated()
             )
 
