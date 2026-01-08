@@ -34,8 +34,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/users/register").permitAll()
                 .requestMatchers("/api/users/{username}").permitAll()
                 .requestMatchers("api/users/test-message-mq").permitAll()
-                .requestMatchers("/api/wallets/deposit").permitAll()
-                .requestMatchers("/api/wallets/withdraw").permitAll()
+                .requestMatchers("/api/wallets/**").permitAll()
                 .anyRequest().authenticated()
             )
 

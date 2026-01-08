@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface WalletRepositoty extends JpaRepository<WalletEntity, Long> {
+public interface WalletRepository extends JpaRepository<WalletEntity, Long> {
     Optional<WalletEntity> findByAccountId(String accountId);
 }
