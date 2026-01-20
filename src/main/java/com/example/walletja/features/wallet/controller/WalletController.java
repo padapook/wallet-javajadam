@@ -1,12 +1,17 @@
 package com.example.walletja.features.wallet.controller;
 
 import com.example.walletja.common.dto.response.DetailedResponse;
+import com.example.walletja.common.dto.response.SimpleResponse;
+import com.example.walletja.common.dto.response.TransferResponse;
 import com.example.walletja.features.wallet.dto.DepositRequest;
+import com.example.walletja.features.wallet.dto.TransferRequest;
 import com.example.walletja.features.wallet.dto.WithdrawRequest;
 import com.example.walletja.features.wallet.entity.WalletEntity;
 import com.example.walletja.features.wallet.entity.WalletTransactionEntity;
 import com.example.walletja.features.wallet.service.WalletService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.repository.support.Repositories;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,17 +31,17 @@ public class WalletController {
 
         //เขียนแบบรับ payload ตรงๆ ยังไม่ได้ผ่าน token
         @PostMapping("/deposit")
-        public ResponseEntity<String> deposit(@RequestBody DepositRequest request) {
+        public ResponseEntity<SimpleResponse> deposit(@RequestBody DepositRequest request) {
             walletService.deposit(request.getAccountId(), request.getAmount());
 
-            return ResponseEntity.ok("Deposit Success");
+            return ResponseEntity.ok(new SimpleResponse(200, "Deposit Success"));
         }
 
         @PostMapping("/withdraw")
-        public ResponseEntity<String> withdraw(@RequestBody WithdrawRequest request) {
+        public ResponseEntity<SimpleResponse> withdraw(@RequestBody WithdrawRequest request) {
             walletService.withdraw(request.getAccountId(), request.getAmount());
 
-            return ResponseEntity.ok("withdraw Success");
+            return ResponseEntity.ok(new SimpleResponse(200, "Withdraw Success"));
         }
 
         @GetMapping("/tx/history/{accountId}")
@@ -50,5 +55,25 @@ public class WalletController {
             );
 
             return ResponseEntity.ok(response);
+        }
+
+        @PostMapping("/transfer")
+        public ResponseEntity<DetailedResponse<TransferResponse>> transfer(@RequestBody TransferRequest request) {
+            TransferResponse receipt = walletService.transfer(
+                request.getFromAccountId(),
+                request.getToAccountId(), 
+                request.getAmount(),
+                request.getRemark()
+            );
+
+            // DetailedResponse<String> response = new DetailedResponse<String>(
+            //     200,
+            //     "Transfer Success",
+            //     "Success"
+            // );
+
+            // return ResponseEntity.ok(response);
+
+            return ResponseEntity.ok(new DetailedResponse<>(200, "Transfer Success", receipt));
         }
 }

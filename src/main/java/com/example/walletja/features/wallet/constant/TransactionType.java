@@ -2,5 +2,7 @@ package com.example.walletja.features.wallet.constant;
 
 public enum TransactionType {
     DEPOSIT,
-    WITHDRAW
+    WITHDRAW,
+    TRANSFER_IN,
+    TRANSFER_OUT
 }

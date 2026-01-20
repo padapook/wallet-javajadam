@@ -1,5 +1,6 @@
 package com.example.walletja.features.wallet.service;
 
+import com.example.walletja.common.dto.response.TransferResponse;
 import com.example.walletja.features.wallet.constant.TransactionType;
 import com.example.walletja.features.wallet.entity.WalletEntity;
 import com.example.walletja.features.wallet.entity.WalletTransactionEntity;
@@ -112,5 +113,76 @@ public class WalletService {
         walletRepository.findByAccountId(accountId).orElseThrow(() -> new RuntimeException("ไม่เจอ accid นี้ใน wallet"));
 
         return walletTransactionRepository.findByAccountIdOrderByCreatedDateDesc(accountId);
+    }
+
+    @Transactional
+    public TransferResponse transfer(String fromAccountId, String toAccountId, BigDecimal amount, String remark) {
+        log.info("testtestjaa");
+
+        //ไม่ให้โอนหาตัวเอง
+        if (fromAccountId.equals(toAccountId)) {
+            throw new RuntimeException("ไม่ให้โอนหาตัวเอง");
+        }
+
+        // // หักเงินจาก fromAcc
+        // withdraw(fromAccountId, amount);
+        // // เพิ่มเงินให้ toAcc
+        // deposit(toAccountId, amount);
+
+        // เช็คว่ามีบัญชีทั้งสองฝั่ง
+        WalletEntity getFromWallet = walletRepository.findByAccountId(fromAccountId).orElseThrow(() -> new RuntimeException("ไม่เจอบัญชีต้นทาง"));
+        WalletEntity getToWallet = walletRepository.findByAccountId(toAccountId).orElseThrow(() -> new RuntimeException("ไม่เจอบัญชีปลายทาง"));
+
+        // ดักไม่ให้โอนเงินติดลบ
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new RuntimeException("โอนเงินติดลบทำไม");
+        }
+
+        // เช็คว่าต้นทางมีเงินพอ
+        if (getFromWallet.getBalance().compareTo(amount) < 0) {
+            throw new RuntimeException("เงินต้นทางไม่พอ");
+        }
+
+        // ถ้าพอก็โอน
+        BigDecimal fromUpdateBalance = getFromWallet.getBalance().subtract(amount);
+        BigDecimal toUpdateBalance = getToWallet.getBalance().add(amount);
+
+        getFromWallet.setBalance(fromUpdateBalance);
+        getToWallet.setBalance(toUpdateBalance);
+
+        walletRepository.save(getFromWallet);
+        walletRepository.save(getToWallet);
+
+        // record tx ฝั่งต้นทาง
+        WalletTransactionEntity txFrom = new WalletTransactionEntity();
+        txFrom.setAccountId(fromAccountId);
+        txFrom.setType(TransactionType.TRANSFER_OUT);
+        txFrom.setAmount(amount);
+        txFrom.setBalanceAfter(fromUpdateBalance);
+        txFrom.setTargetAccountId(toAccountId);
+        txFrom.setRemark(remark);
+        // walletTransactionRepository.save(txFrom);
+        WalletTransactionEntity TransId = walletTransactionRepository.save(txFrom);
+
+        // record tx ฝั่งปลายทาง
+        WalletTransactionEntity txTo = new WalletTransactionEntity();
+        txTo.setAccountId(toAccountId);
+        txTo.setType(TransactionType.TRANSFER_IN);
+        txTo.setAmount(amount);
+        txTo.setBalanceAfter(toUpdateBalance);
+        txTo.setTargetAccountId(fromAccountId);
+        txTo.setRemark(remark);
+        walletTransactionRepository.save(txTo);
+
+        // เอา data ออกไปทำสลิป
+        TransferResponse receipt = new TransferResponse();
+        receipt.setTransactionId(TransId.getId().toString());
+        receipt.setFromAccountId(fromAccountId);
+        receipt.setToAccountId(toAccountId);
+        receipt.setAmount(amount);
+        receipt.setBalanceAfter(fromUpdateBalance);
+        receipt.setRemark(remark);
+
+        return receipt;
     }
 }

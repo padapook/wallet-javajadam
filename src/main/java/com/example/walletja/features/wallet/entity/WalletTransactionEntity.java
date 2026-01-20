@@ -40,6 +40,12 @@ public class WalletTransactionEntity {
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal balanceAfter;
 
+    @Column(nullable = false)
+    private String targetAccountId;
+
+    @Column(nullable = true)
+    private String remark;
+
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime createdDate;
