@@ -40,7 +40,7 @@ public class WalletTransactionEntity {
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal balanceAfter;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String targetAccountId;
 
     @Column(nullable = true)
