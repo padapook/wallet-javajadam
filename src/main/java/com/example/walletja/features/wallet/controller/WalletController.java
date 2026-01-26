@@ -4,6 +4,7 @@ import com.example.walletja.common.dto.response.DetailedResponse;
 import com.example.walletja.common.dto.response.SimpleResponse;
 import com.example.walletja.common.dto.response.TransferResponse;
 import com.example.walletja.features.wallet.dto.DepositRequest;
+import com.example.walletja.features.wallet.dto.TransactionHistory;
 import com.example.walletja.features.wallet.dto.TransferRequest;
 import com.example.walletja.features.wallet.dto.WithdrawRequest;
 import com.example.walletja.features.wallet.entity.WalletEntity;
@@ -45,10 +46,10 @@ public class WalletController {
         }
 
         @GetMapping("/tx/history/{accountId}")
-        public ResponseEntity<DetailedResponse<List<WalletTransactionEntity>>> getTransactionHistory(@PathVariable String accountId) {
-            List<WalletTransactionEntity> txhistory = walletService.getTransactionHistory(accountId);
+        public ResponseEntity<DetailedResponse<List<TransactionHistory>>> getTransactionHistory(@PathVariable String accountId) {
+            List<TransactionHistory> txhistory = walletService.getTransactionHistory(accountId);
 
-            DetailedResponse<List<WalletTransactionEntity>> response = new DetailedResponse<>(
+            DetailedResponse<List<TransactionHistory>> response = new DetailedResponse<>(
                 200,
                 "Success",
                 txhistory

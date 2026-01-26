@@ -1,6 +1,7 @@
 package com.example.walletja.features.wallet.service;
 
 import com.example.walletja.common.dto.response.TransferResponse;
+import com.example.walletja.features.wallet.dto.TransactionHistory;
 import com.example.walletja.features.wallet.constant.TransactionType;
 import com.example.walletja.features.wallet.entity.WalletEntity;
 import com.example.walletja.features.wallet.entity.WalletTransactionEntity;
@@ -12,20 +13,23 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
-
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class WalletService {
     private final WalletRepository walletRepository;
-    private final WalletTransactionRepository  walletTransactionRepository;
+    private final WalletTransactionRepository walletTransactionRepository;
 
     @Transactional
     public void createWallet(String accountId) {
         log.info("accid {}", accountId);
-        if(walletRepository.findByAccountId(accountId).isPresent()) {
+        if (walletRepository.findByAccountId(accountId).isPresent()) {
             log.warn("Wallet for accountId: {} already exists", accountId);
             return;
         }
@@ -44,8 +48,7 @@ public class WalletService {
     public void deposit(String accountId, BigDecimal amount) {
         log.info("เข้า deposit");
         WalletEntity wallet = walletRepository.findByAccountId(accountId).orElseThrow(() -> new RuntimeException(
-            String.format("Wallet doesnt exists for accountId: %s", accountId)
-        ));
+                String.format("Wallet doesnt exists for accountId: %s", accountId)));
 
         // ความหมายเหมือนกัน
         // BigDecimal currentBalance = wallet.getBalance();
@@ -66,7 +69,8 @@ public class WalletService {
 
         walletTransactionRepository.save(tx);
 
-        // log.info("accid:{} ,old:{}, new:{}", accountId, currentBalance, updatedBalance);
+        // log.info("accid:{} ,old:{}, new:{}", accountId, currentBalance,
+        // updatedBalance);
     }
 
     @Transactional
@@ -75,13 +79,13 @@ public class WalletService {
 
         // ไม่มี account ใน wallet
         WalletEntity wallet = walletRepository.findByAccountId(accountId).orElseThrow(() -> new RuntimeException(
-            String.format("ไม่มี accountid: %s", accountId)
-        ));
+                String.format("ไม่มี accountid: %s", accountId)));
 
-        //ยอดเงินน้อยกว่าที่ส่งเข้ามาถอน
-        if(wallet.getBalance().compareTo(amount) < 0) {
-            log.warn("ตังไม่พอ เหลืออยู่:{} แต่ส่งมาถอน:{}", wallet.getBalance(), amount);
-            throw new RuntimeException(String.format("ตังไม่พอ เหลืออยู่:%s แต่ส่งมาถอน:%s", wallet.getBalance(), amount));
+        // ยอดเงินน้อยกว่าที่ส่งเข้ามาถอน
+        if (wallet.getBalance().compareTo(amount) < 0) {
+            // log.warn("ตังไม่พอ เหลืออยู่:{} แต่ส่งมาถอน:{}", wallet.getBalance(), amount);
+            throw new RuntimeException(
+                    String.format("ตังไม่พอ เหลืออยู่:%s แต่ส่งมาถอน:%s", wallet.getBalance(), amount));
         }
 
         // BigDecimal currentBalance = wallet.getBalance();
@@ -109,17 +113,44 @@ public class WalletService {
     }
 
     @Transactional(readOnly = true)
-    public List<WalletTransactionEntity> getTransactionHistory(String accountId) {
+    public List<TransactionHistory> getTransactionHistory(String accountId) {
         walletRepository.findByAccountId(accountId).orElseThrow(() -> new RuntimeException("ไม่เจอ accid นี้ใน wallet"));
 
-        return walletTransactionRepository.findByAccountIdOrderByCreatedDateDesc(accountId);
+        // ปรับจาก datetime ให้เป็น string
+        DateTimeFormatter stringFormat = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm", Locale.ENGLISH);
+
+        return walletTransactionRepository.findByAccountIdOrderByCreatedDateDesc(accountId)
+            .stream()
+            .map(entity -> {
+                TransactionHistory dto = new TransactionHistory();
+                dto.setDisplayTitle(displayTitle(entity));
+                dto.setAmount(entity.getAmount());
+                dto.setStatus("SUCCESS");
+                dto.setRemark(entity.getRemark());
+                dto.setDatetime(entity.getCreatedDate() != null ? entity.getCreatedDate().format(stringFormat) : "");
+                return dto;
+            })
+            .collect(Collectors.toList());
+            
+        // return walletTransactionRepository.findByAccountIdOrderByCreatedDateDesc(accountId);
+
+    }
+
+    private String displayTitle(WalletTransactionEntity entity) {
+        return switch (entity.getType()) {
+            case DEPOSIT -> "Testฝากเงิน";
+            case WITHDRAW -> "ถอนเงิน";
+            case TRANSFER_OUT -> "โอนเงินให้ " + entity.getTargetAccountId();
+            case TRANSFER_IN -> "ได้รับเงินจาก " + entity.getTargetAccountId();
+            default -> "รายการ";
+        };
     }
 
     @Transactional
     public TransferResponse transfer(String fromAccountId, String toAccountId, BigDecimal amount, String remark) {
         log.info("testtestjaa");
 
-        //ไม่ให้โอนหาตัวเอง
+        // ไม่ให้โอนหาตัวเอง
         if (fromAccountId.equals(toAccountId)) {
             throw new RuntimeException("ไม่ให้โอนหาตัวเอง");
         }
@@ -130,8 +161,10 @@ public class WalletService {
         // deposit(toAccountId, amount);
 
         // เช็คว่ามีบัญชีทั้งสองฝั่ง
-        WalletEntity getFromWallet = walletRepository.findByAccountId(fromAccountId).orElseThrow(() -> new RuntimeException("ไม่เจอบัญชีต้นทาง"));
-        WalletEntity getToWallet = walletRepository.findByAccountId(toAccountId).orElseThrow(() -> new RuntimeException("ไม่เจอบัญชีปลายทาง"));
+        WalletEntity getFromWallet = walletRepository.findByAccountId(fromAccountId)
+                .orElseThrow(() -> new RuntimeException("ไม่เจอบัญชีต้นทาง"));
+        WalletEntity getToWallet = walletRepository.findByAccountId(toAccountId)
+                .orElseThrow(() -> new RuntimeException("ไม่เจอบัญชีปลายทาง"));
 
         // ดักไม่ให้โอนเงินติดลบ
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {

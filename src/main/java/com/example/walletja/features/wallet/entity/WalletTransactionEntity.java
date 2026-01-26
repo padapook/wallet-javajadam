@@ -49,5 +49,4 @@ public class WalletTransactionEntity {
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime createdDate;
-
 }
