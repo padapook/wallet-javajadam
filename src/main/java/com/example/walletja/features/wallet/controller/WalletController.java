@@ -10,6 +10,8 @@ import com.example.walletja.features.wallet.dto.WithdrawRequest;
 import com.example.walletja.features.wallet.entity.WalletEntity;
 import com.example.walletja.features.wallet.entity.WalletTransactionEntity;
 import com.example.walletja.features.wallet.service.WalletService;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.repository.support.Repositories;
@@ -39,7 +41,7 @@ public class WalletController {
         }
 
         @PostMapping("/withdraw")
-        public ResponseEntity<SimpleResponse> withdraw(@RequestBody WithdrawRequest request) {
+        public ResponseEntity<SimpleResponse> withdraw(@Valid @RequestBody WithdrawRequest request) {
             walletService.withdraw(request.getAccountId(), request.getAmount());
 
             return ResponseEntity.ok(new SimpleResponse(200, "Withdraw Success"));

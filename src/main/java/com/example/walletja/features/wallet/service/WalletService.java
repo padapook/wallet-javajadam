@@ -8,6 +8,8 @@ import com.example.walletja.features.wallet.entity.WalletTransactionEntity;
 import com.example.walletja.features.wallet.repository.WalletRepository;
 import com.example.walletja.features.wallet.repository.WalletTransactionRepository;
 
+import com.example.walletja.features.wallet.exception.WalletException;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -47,7 +49,7 @@ public class WalletService {
     @Transactional
     public void deposit(String accountId, BigDecimal amount) {
         log.info("เข้า deposit");
-        WalletEntity wallet = walletRepository.findByAccountId(accountId).orElseThrow(() -> new RuntimeException(
+        WalletEntity wallet = walletRepository.findByAccountId(accountId).orElseThrow(() -> new WalletException(
                 String.format("Wallet doesnt exists for accountId: %s", accountId)));
 
         // ความหมายเหมือนกัน
@@ -78,13 +80,13 @@ public class WalletService {
         log.info("เข้า withdraw");
 
         // ไม่มี account ใน wallet
-        WalletEntity wallet = walletRepository.findByAccountId(accountId).orElseThrow(() -> new RuntimeException(
+        WalletEntity wallet = walletRepository.findByAccountId(accountId).orElseThrow(() -> new WalletException(
                 String.format("ไม่มี accountid: %s", accountId)));
 
         // ยอดเงินน้อยกว่าที่ส่งเข้ามาถอน
         if (wallet.getBalance().compareTo(amount) < 0) {
             // log.warn("ตังไม่พอ เหลืออยู่:{} แต่ส่งมาถอน:{}", wallet.getBalance(), amount);
-            throw new RuntimeException(
+            throw new WalletException(
                     String.format("ตังไม่พอ เหลืออยู่:%s แต่ส่งมาถอน:%s", wallet.getBalance(), amount));
         }
 
@@ -114,7 +116,7 @@ public class WalletService {
 
     @Transactional(readOnly = true)
     public List<TransactionHistory> getTransactionHistory(String accountId) {
-        walletRepository.findByAccountId(accountId).orElseThrow(() -> new RuntimeException("ไม่เจอ accid นี้ใน wallet"));
+        walletRepository.findByAccountId(accountId).orElseThrow(() -> new WalletException("ไม่เจอ accid นี้ใน wallet"));
 
         // ปรับจาก datetime ให้เป็น string
         DateTimeFormatter stringFormat = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm", Locale.ENGLISH);
@@ -152,7 +154,7 @@ public class WalletService {
 
         // ไม่ให้โอนหาตัวเอง
         if (fromAccountId.equals(toAccountId)) {
-            throw new RuntimeException("ไม่ให้โอนหาตัวเอง");
+            throw new WalletException("ไม่ให้โอนหาตัวเอง");
         }
 
         // // หักเงินจาก fromAcc
@@ -162,18 +164,18 @@ public class WalletService {
 
         // เช็คว่ามีบัญชีทั้งสองฝั่ง
         WalletEntity getFromWallet = walletRepository.findByAccountId(fromAccountId)
-                .orElseThrow(() -> new RuntimeException("ไม่เจอบัญชีต้นทาง"));
+                .orElseThrow(() -> new WalletException("ไม่เจอบัญชีต้นทาง"));
         WalletEntity getToWallet = walletRepository.findByAccountId(toAccountId)
-                .orElseThrow(() -> new RuntimeException("ไม่เจอบัญชีปลายทาง"));
+                .orElseThrow(() -> new WalletException("ไม่เจอบัญชีปลายทาง"));
 
         // ดักไม่ให้โอนเงินติดลบ
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new RuntimeException("โอนเงินติดลบทำไม");
+            throw new WalletException("โอนเงินติดลบทำไม");
         }
 
         // เช็คว่าต้นทางมีเงินพอ
         if (getFromWallet.getBalance().compareTo(amount) < 0) {
-            throw new RuntimeException("เงินต้นทางไม่พอ");
+            throw new WalletException("เงินต้นทางไม่พอ");
         }
 
         // ถ้าพอก็โอน
