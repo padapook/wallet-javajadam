@@ -1,14 +1,18 @@
 # Wallet-Javajadam (Backend)
 
-Project For Learning JAVA
+A high-integrity Digital Wallet System built with **Java 21** and **Spring Boot 3**. 
+This project serves as a showcase for implementing financial transaction logic with 
+strong emphasis on **Data Consistency**, **Security (JWT/Argon2)**, and **Comprehensive Testing**.
 
 **Version:** v0.0.1
 
 ---
 
 ## 🏗 Project Structure
+- `src/main/java/.../features/` → Feature-based packaging (Wallet, Auth, etc.)
+- `src/main/java/.../common/` → Shared DTOs, Exceptions, and Utilities
 - `src/main/java/.../controller/` → Handles incoming HTTP requests
-- `src/main/java/.../service/` → Contains business logic
+- `src/main/java/.../service/` → Contains business logic & transaction management
 - `src/main/java/.../repository/` → Manages database access (JPA/Native)
 - `src/main/java/.../entity/` → Defines database schemas
 - `src/main/resources/` → Application configuration (`application.yml`)
@@ -16,11 +20,22 @@ Project For Learning JAVA
 ---
 
 ## 🛠 Prerequisites & Tech Stack
-- **Java:** JDK 21
-- **Framework:** Spring Boot 3.x
-- **Database:** PostgreSQL (Docker)
-- **Security:** Spring Security with Argon2
-- **Tools:** Lombok, MapStruct
+- **Language:** Java 21 (LTS)
+- **Framework:** Spring Boot 3.4
+- **Database:** PostgreSQL
+- **Caching:** Redis (Session & Performance)
+- **MQ:** RabbitMQ (Async Processing)
+- **Auth:** Spring Security with JWT & Argon2 hashing
+- **Testing:** JUnit 5, Mockito (TDD Approach)
+- **Tools:** Lombok, MapStruct, Jackson (JSR310)
+
+---
+
+## 🛡 Security & Design Principles
+- **Stateless Auth:** JWT-based authentication via Authorization: Bearer header.
+- **Data Integrity:** Transactional consistency for money transfers (ACID).
+- **Idempotency:** Designed to prevent double-spending and duplicate transactions.
+- **Concurrency:** Handling race conditions in high-traffic wallet operations.
 
 ---
 
@@ -34,6 +49,17 @@ Project For Learning JAVA
 ### 2. Run Project
 ```bash
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
+### 3. Run UnitT est
+ทั้งโปรเจค
+```bash
+./mvnw test
+```
+
+เฉพาะ Service เช่น WalletService
+```bash
+./mvnw test -Dtest=WalletServiceTest
 ```
 
 ---
@@ -74,6 +100,7 @@ feat(auth): Added JWT token-based authentication for secure login
 fix(database): Fixed connection pool timeout issue
 docs(readme): Updated installation instructions
 refactor(controller): Simplified user validation logic
+test(service): add thoroughness tests for withdrawal
 ```
 
 ---
@@ -83,8 +110,8 @@ Use fully qualified imports or organize packages properly. Avoid wildcard import
 Package structure in pom.xml:
 
 ```xml
-<groupId>com.donttestonprod</groupId>
-<artifactId>eiei</artifactId>
+<groupId>me.pook.wallet</groupId>
+<artifactId>wallet-service</artifactId>
 ```
 
 **Examples:**
