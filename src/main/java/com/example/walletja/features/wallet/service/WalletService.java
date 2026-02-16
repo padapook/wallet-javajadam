@@ -49,8 +49,19 @@ public class WalletService {
     @Transactional
     public void deposit(String accountId, BigDecimal amount) {
         log.info("เข้า deposit");
+
+        if (accountId == null || accountId.trim().isEmpty()) {
+            throw new WalletException("เลข บช ต้องห้ามเป็น null หรือ empty string");
+        }
+
+        // ดักเงิน null กับ < 0
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new WalletException("เงินที่ฝากต้องมากกว่า 0");
+        }
+
         WalletEntity wallet = walletRepository.findByAccountId(accountId).orElseThrow(() -> new WalletException(
-                String.format("Wallet doesnt exists for accountId: %s", accountId)));
+            String.format("Wallet doesnt exists for accountId: %s", accountId)
+        ));
 
         // ความหมายเหมือนกัน
         // BigDecimal currentBalance = wallet.getBalance();
